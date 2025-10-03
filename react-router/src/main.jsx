@@ -11,7 +11,11 @@ import Root from './assets/component/root/Root.jsx'
 import { Suspense } from 'react'
 import User2 from './assets/component/user2/User2.jsx'
 import Feature from './assets/component/feature/Feature.jsx'
+import Post from './assets/component/post/Post.jsx'
+
 const data2=fetch('https://jsonplaceholder.typicode.com/users').then(res=>res.json());
+
+const data3=fetch("https://jsonplaceholder.typicode.com/posts").then(res=>res.json());
 const router=createBrowserRouter([
   // {
   //   path:'/',
@@ -35,11 +39,25 @@ const router=createBrowserRouter([
       },
       {
         path:'user2/:userid',
-        loader:({params})=>fetch("https://jsonplaceholder.typicode.com/users") ,
+       loader:({params})=>{
+          
+        console.log(params.userid);
+        return fetch(`https://jsonplaceholder.typicode.com/users/${params.userid}`)
+           
+       }
+       ,
         Component:Feature
       },
-
+         
+      {
+        path:'/post',
+        element:<Suspense fallback={<h1>data load</h1>}> <Post data3={data3}></Post></Suspense>
+      }
     ]
+    
+  },{
+    path:'*',
+    element: <h3>404 not found</h3>
   }
   
 ])
